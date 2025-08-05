@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .quiz-container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .answer-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background-color: #eee;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .answer-btn:hover {
+      background-color: #1a084f90;
+    }
+
+    .correct {
+      background-color: #c8e6c9 !important;
+    }
+
+    .incorrect {
+      background-color: #ffcdd2 !important;
+    }
+
+    #feedback {
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    #next-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #next-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container" id="quiz">
+    <h2 id="question">Loading question...</h2>
+    <ul>
+      <li><button class="answer-btn" onclick="selectAnswer(this)">Option 1</button></li>
+      <li><button class="answer-btn" onclick="selectAnswer(this)">Option 2</button></li>
+      <li><button class="answer-btn" onclick="selectAnswer(this)">Option 3</button></li>
+      <li><button class="answer-btn" onclick="selectAnswer(this)">Option 4</button></li>
+    </ul>
+    <p id="feedback"></p>
+    <button id="next-btn" onclick="loadNextQuestion()">Next</button>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "1. What does HTML stand for?",
+        options: ["Hyper Text Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language", "Hyperlink Tool Mark Language"],
+        correct: "Hyper Text Markup Language"
+      },
+      {
+        question: "2. What is the correct HTML element for inserting a line break?",
+        options: ["<br>", "<lb>", "<break>", "<newline>"],
+        correct: "<br>"
+      },
+      {
+        question: "3. Which HTML attribute is used to define inline styles?",
+        options: ["style", "class", "font", "styles"],
+        correct: "style"
+      },
+      {
+        question: "4. Which tag is used to create a hyperlink in HTML?",
+        options: ["<a>", "<link>", "<href>", "<url>"],
+        correct: "<a>"
+      },
+      {
+        question: "5. What does CSS stand for?",
+        options: ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"],
+        correct: "Cascading Style Sheets"
+      },
+      {
+        question: "6. Inside which HTML element do we put the JavaScript?",
+        options: ["<script>", "<js>", "<javascript>", "<code>"],
+        correct: "<script>"
+      },
+      {
+        question: "7. Which HTML element is used to display a picture?",
+        options: ["<img>", "<src>", "<image>", "<pic>"],
+        correct: "<img>"
+      },
+      {
+        question: "8. Which HTML attribute specifies an alternate text for an image?",
+        options: ["alt", "title", "src", "longdesc"],
+        correct: "alt"
+      },
+      {
+        question: "9. What is the correct HTML for making a checkbox?",
+        options: ["<input type='checkbox'>", "<checkbox>", "<input type='check'>", "<check>"],
+        correct: "<input type='checkbox'>"
+      },
+      {
+        question: "10. What is the correct HTML for creating a drop-down list?",
+        options: ["<select>", "<dropdown>", "<list>", "<input type='dropdown'>"],
+        correct: "<select>"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadNextQuestion() {
+      const quiz = document.getElementById("quiz");
+      const questionEl = document.getElementById("question");
+      const feedbackEl = document.getElementById("feedback");
+      const buttons = document.querySelectorAll(".answer-btn");
+
+      if (currentQuestion >= quizData.length) {
+        quiz.innerHTML = `<h2>You scored ${score} out of ${quizData.length}.</h2>`;
+        return;
+      }
+
+      const current = quizData[currentQuestion];
+      questionEl.innerText = current.question;
+      feedbackEl.innerText = "";
+
+      buttons.forEach((btn, index) => {
+        btn.innerText = current.options[index];
+        btn.classList.remove("correct", "incorrect");
+        btn.disabled = false;
+      });
+    }
+
+    function selectAnswer(button) {
+      const selected = button.innerText;
+      const correct = quizData[currentQuestion].correct;
+      const feedback = document.getElementById("feedback");
+
+      if (selected === correct) {
+        button.classList.add("correct");
+        feedback.innerText = "Correct!";
+        score++;
+      } else {
+        button.classList.add("incorrect");
+        feedback.innerText = `Wrong! Correct answer: ${correct}`;
+      }
+
+      // Disable all buttons
+      document.querySelectorAll(".answer-btn").forEach(btn => btn.disabled = true);
+
+      currentQuestion++;
+    }
+
+    // Initialize
+    window.onload = loadNextQuestion;
+  </script>
+</body>
+</html>
